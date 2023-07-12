@@ -1,12 +1,12 @@
 package com.example.lv2brosecond.service;
 
+import com.example.lv2brosecond.config.PasswordConfig;
 import com.example.lv2brosecond.dto.UserLoginRequestDto;
 import com.example.lv2brosecond.dto.UserSignupRequestDto;
 import com.example.lv2brosecond.entity.User;
 import com.example.lv2brosecond.repository.UserRepository;
-import com.example.lv2brosecond.util.JwUtil;
+import com.example.lv2brosecond.util.JwtUtil;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -15,10 +15,12 @@ import java.util.Optional;
 //@RequiredArgsConstructor//얘없이 주입?생성자만들고싶은데 왜 안되지?->주석처리 풀면 @RequiredArgsConstructor없으면 안됨
 public class UserService {
     private final UserRepository userRepository;
-    private final JwUtil jwUtil;
-    public UserService(UserRepository userRepository, JwUtil jwUtil){
+    private final JwtUtil jwUtil;
+    private final PasswordConfig passwordConfig;
+    public UserService(UserRepository userRepository, JwtUtil jwUtil, PasswordConfig passwordConfig){
         this.userRepository = userRepository;
         this.jwUtil = jwUtil;
+        this.passwordConfig = passwordConfig;
     }
 //    public UserService(JwUtil jwUtil){
 //        this.jwUtil = jwUtil;
@@ -27,9 +29,11 @@ public class UserService {
     public String signup(UserSignupRequestDto requestDto) {
         String username = requestDto.getUsername();
         String password = requestDto.getPassword();
+        password = passwordConfig.passwordEncoder().encode(password);
 
         //Optional null값을 허용함 id가 없을수도 있으니 Optional로 감싸준것 (래퍼타입)
         Optional<User> checkUsername = userRepository.findByUsername(username);
+        System.out.println(checkUsername);
         // RequestDto -> Entity
         if(checkUsername.isPresent()){
             throw new IllegalArgumentException("중복된 사용자가 존재합니다.");
@@ -42,9 +46,13 @@ public class UserService {
 
     public String login(UserLoginRequestDto requestDto, HttpServletResponse httpServletResponse) {
         Optional<User> user = userRepository.findByUsername(requestDto.getUsername());
-        if(user.get().getPassword().equals(requestDto.getPassword())){//비밀번호가 같다면 토큰을 생성해준다->헤더에 보내는데 2가지 방식이 있다.쿠키에 실어보내는 방식으로 해보자
+        String password = requestDto.getPassword();
+        password = passwordConfig.passwordEncoder().encode(password);
+
+        if(passwordConfig.passwordEncoder().matches(requestDto.getPassword(),password)){//비밀번호가 같다면 토큰을 생성해준다->헤더에 보내는데 2가지 방식이 있다.쿠키에 실어보내는 방식으로 해보자
             String token = jwUtil.createToken(user.get().getUsername(), user.get().getUserRole());
             jwUtil.addJwtToCookie(token, httpServletResponse);
+
         }else{
             throw new IllegalArgumentException("비밀번호가 틀렸습니다");
         }

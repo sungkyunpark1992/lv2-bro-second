@@ -21,7 +21,7 @@ import java.util.Base64;
 import java.util.Date;
 
 @Component
-public class JwUtil {
+public class JwtUtil {
     // Header KEY 값
     public static final String AUTHORIZATION_HEADER = "Authorization";
     // 사용자 권한 값의 KEY

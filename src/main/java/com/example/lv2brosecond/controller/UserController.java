@@ -1,13 +1,12 @@
 package com.example.lv2brosecond.controller;
 
+import com.example.lv2brosecond.dto.ProductRequestDto;
 import com.example.lv2brosecond.dto.UserLoginRequestDto;
 import com.example.lv2brosecond.dto.UserSignupRequestDto;
 import com.example.lv2brosecond.service.UserService;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import jakarta.validation.Valid;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api")
@@ -31,6 +30,10 @@ public class UserController {
         return username + " Login Success!";
     }
 
-
+    @PostMapping("/validation")
+    @ResponseBody
+    public ProductRequestDto testValid(@RequestBody @Valid ProductRequestDto requestDto) {
+        return requestDto;
+    }
 
 }

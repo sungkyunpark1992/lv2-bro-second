@@ -3,6 +3,8 @@ package com.example.lv2brosecond.controller;
 import com.example.lv2brosecond.dto.PostRequestDto;
 import com.example.lv2brosecond.dto.PostResponseDto;
 import com.example.lv2brosecond.service.PostService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,8 +19,8 @@ public class PostController {
     }
 
     @PostMapping("/post")
-    public PostResponseDto createPost(@RequestBody PostRequestDto requestDto) {
-        return postService.createPost(requestDto);
+    public PostResponseDto createPost(@RequestBody PostRequestDto requestDto, HttpServletRequest httpServletRequest) {
+        return postService.createPost(requestDto, httpServletRequest);
     }
     @GetMapping("/posts")
     public List<PostResponseDto> getPosts(){
@@ -29,14 +31,12 @@ public class PostController {
         return postService.getPost(id, requestDto);
     }
     @PutMapping("/post/{id}")
-    public PostResponseDto updatePost(@PathVariable Long id, @RequestBody PostRequestDto requestDto){
-        return postService.updatePost(id, requestDto);
+    public PostResponseDto updatePost(@PathVariable Long id, @RequestBody PostRequestDto requestDto,
+                                      HttpServletRequest httpServletRequest){
+        return postService.updatePost(id, requestDto, httpServletRequest);
     }
     @DeleteMapping("/post/{id}")
-    public Boolean deletePost(@PathVariable Long id, @RequestBody PostRequestDto requestDto){
-        return postService.deletePost(id, requestDto);
+    public Boolean deletePost(@PathVariable Long id, HttpServletRequest httpServletRequest){
+        return postService.deletePost(id, httpServletRequest);
     }
-
-
-
 }

@@ -19,25 +19,29 @@ public class Post extends Timestamped {
     private String content;
 //    private LocalDateTime createAt;
 
+    @Column(name = "username", nullable = false)
+    private String username;
+
     @ManyToOne
     private User user;
 
-//    public  Post (PostRequestDto)
+    //    public  Post (PostRequestDto)
 //    public Post(String title, String content, LocalDateTime createAt, User user){
 //        this.title = title;
 //        this.content = content;
 //        this.createAt = createAt;
 //        this.user = user;
-//    }
-    public Post(PostRequestDto requestDto) {
+    //    }
+    public Post(PostRequestDto requestDto, String username) {
         this.title = requestDto.getTitle();
         this.content = requestDto.getContent();
+        this.username = username;
 //        this.createAt = requestDto.get
     }
-    public Post(){}
-
     public void update(PostRequestDto requestDto) {
         this.title = requestDto.getTitle();
         this.content = requestDto.getContent();
     }
+
+    public Post(){}
 }
