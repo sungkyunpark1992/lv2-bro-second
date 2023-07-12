@@ -12,16 +12,17 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service
-@RequiredArgsConstructor//얘없이 주입?생성자만들고싶은데 왜 안되지?->주석처리 풀면 @RequiredArgsConstructor없으면 안됨
+//@RequiredArgsConstructor//얘없이 주입?생성자만들고싶은데 왜 안되지?->주석처리 풀면 @RequiredArgsConstructor없으면 안됨
 public class UserService {
     private final UserRepository userRepository;
-//    public UserService(UserRepository userRepository){
-//        this.userRepository = userRepository;
-//    }
     private final JwUtil jwUtil;
+    public UserService(UserRepository userRepository, JwUtil jwUtil){
+        this.userRepository = userRepository;
+        this.jwUtil = jwUtil;
+    }
 //    public UserService(JwUtil jwUtil){
 //        this.jwUtil = jwUtil;
-//    }
+//    } 얘를 생성자를 따로 2개를 만들면 안된다.
 
     public String signup(UserSignupRequestDto requestDto) {
         String username = requestDto.getUsername();
@@ -48,6 +49,5 @@ public class UserService {
             throw new IllegalArgumentException("비밀번호가 틀렸습니다");
         }
         return requestDto.getUsername();
-
     }
 }

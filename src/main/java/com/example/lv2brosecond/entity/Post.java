@@ -1,32 +1,43 @@
 package com.example.lv2brosecond.entity;
 
+import com.example.lv2brosecond.dto.PostRequestDto;
 import jakarta.persistence.*;
 import lombok.Getter;
-import org.springframework.cglib.core.Local;
-
-import java.time.LocalDateTime;
+import lombok.Setter;
 
 @Entity
 @Getter
-public class Post {
+@Setter
+@Table(name = "blogpost")
+public class Post extends Timestamped {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    @Column(name = "title", nullable = false)
     private String title;
+    @Column(name = "content", nullable = false)
     private String content;
-    private LocalDateTime createAt;
+//    private LocalDateTime createAt;
 
     @ManyToOne
     private User user;
 
-    public Post(String title, String content, LocalDateTime createAt){
-        this.title = title;
-        this.content = content;
-        this.createAt = createAt;
-        this.user = user;
+//    public  Post (PostRequestDto)
+//    public Post(String title, String content, LocalDateTime createAt, User user){
+//        this.title = title;
+//        this.content = content;
+//        this.createAt = createAt;
+//        this.user = user;
+//    }
+    public Post(PostRequestDto requestDto) {
+        this.title = requestDto.getTitle();
+        this.content = requestDto.getContent();
+//        this.createAt = requestDto.get
     }
-
     public Post(){}
 
+    public void update(PostRequestDto requestDto) {
+        this.title = requestDto.getTitle();
+        this.content = requestDto.getContent();
+    }
 }
